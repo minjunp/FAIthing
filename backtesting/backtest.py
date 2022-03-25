@@ -1,5 +1,4 @@
 from copy import deepcopy
-
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,15 +6,10 @@ import pandas as pd
 import pyfolio
 from pyfolio import timeseries
 from data_loader.yahooDownloader import YahooDownloader
+import sys
 
 from utils.fetch_args import fetch_args
-from config import config
-config2 = fetch_args()
-SAVE_DIR = '/Users/minjunpark/Documents/RLfinance/saved_models'
-DATA_SAVE_DIR = "datasets"
-TRAINED_MODEL_DIR = "trained_models"
-TENSORBOARD_LOG_DIR = "tensorboard_log"
-RESULTS_DIR = "results"
+config = fetch_args()
 
 def get_daily_return(df, value_col_name="account_value"):
     df = deepcopy(df)
@@ -45,7 +39,7 @@ def backtest_stats(account_value, value_col_name="account_value"):
     )
     print(perf_stats_all)
 
-    perf_stats_all.to_csv(f'{SAVE_DIR}/{config2.currentTime}/{RESULTS_DIR}/perf_stats_all.csv')
+    perf_stats_all.to_csv(f'{config.SAVE_DIR}/{config.currentTime}/{config.RESULTS_DIR}/perf_stats_all.csv')
     return perf_stats_all
 
 
@@ -70,14 +64,14 @@ def backtest_plot(
     baseline_df = baseline_df.fillna(method="ffill").fillna(method="bfill")
     baseline_returns = get_daily_return(baseline_df, value_col_name="close")
 
-    # with pyfolio.plotting.plotting_context(font_scale=1.1):
-    #     pyfolio.create_full_tear_sheet(
-    #         returns=test_returns, benchmark_rets=baseline_returns, set_context=False
-    #     )
+    with pyfolio.plotting.plotting_context(font_scale=1.1):
+        pyfolio.create_full_tear_sheet(
+            returns=test_returns, benchmark_rets=baseline_returns, set_context=False
+        )
 
-    viz = pyfolio.create_full_tear_sheet(
-        returns=test_returns, benchmark_rets=baseline_returns, set_context=False)
-    viz.savefig(f'{SAVE_DIR}/{config2.currentTime}/{RESULTS_DIR}/backtest_plot.png')
+    # viz = pyfolio.create_full_tear_sheet(
+    #     returns=test_returns, benchmark_rets=baseline_returns, set_context=False)
+    # viz.savefig(f'{config.SAVE_DIR}/{config.currentTime}/{config.RESULTS_DIR}/backtest_plot.png')
 
 
 def get_baseline(ticker, start, end):
