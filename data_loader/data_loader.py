@@ -37,7 +37,7 @@ def yahooProcessor(ticker_list, indicator_list, start_date, end_date):
             temp_df = Indicators.addSMA(temp_df)
 
         # Append to dataframe
-        df = df.append(temp_df)
+        df = pd.concat([df, temp_df], ignore_index=True)
 
     # create day of the week column (monday = 0)
     df["day"] = df["date"].dt.dayofweek
