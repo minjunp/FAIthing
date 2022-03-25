@@ -26,4 +26,7 @@ def fetch_args():
     args.TENSORBOARD_LOG_DIR = "tensorboard_log"
     args.RESULTS_DIR = "results"
 
+    args.TRADE_START_DATE = "2021-11-01"
+    args.TRADE_END_DATE = "2021-12-01"
+
     return args
