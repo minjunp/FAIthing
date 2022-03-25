@@ -71,7 +71,7 @@ def backtest_plot(
 
     # viz = pyfolio.create_full_tear_sheet(
     #     returns=test_returns, benchmark_rets=baseline_returns, set_context=False)
-    # viz.savefig(f'{config.SAVE_DIR}/{config.currentTime}/{config.RESULTS_DIR}/backtest_plot.png')
+    plt.savefig(f'{config.SAVE_DIR}/{config.currentTime}/{config.RESULTS_DIR}/backtest_plot.png')
 
 
 def get_baseline(ticker, start, end):
