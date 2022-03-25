@@ -54,7 +54,8 @@ conda create -n RLfinance python=3.8
 pip install pandas sklearn matplotlib seaborn notebook
 conda install -c conda-forge ta-lib
 pip install yfinance
-pip install gym==0.7.4 stable-baselines3 pyfolio
+pip install gym==0.7.4 stable-baselines3
+pip install git+https://github.com/quantopian/pyfolio
 ```
 
 If using Nvidia GPU:
