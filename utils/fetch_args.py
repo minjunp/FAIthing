@@ -2,12 +2,6 @@ import argparse
 from numpy import float64
 import datetime
 
-SAVE_DIR = '/Users/minjunpark/Documents/RLfinance/saved_models'
-DATA_SAVE_DIR = "datasets"
-TRAINED_MODEL_DIR = "trained_models"
-TENSORBOARD_LOG_DIR = "tensorboard_log"
-RESULTS_DIR = "results"
-
 # Needs to be modified...
 def fetch_args():
     parser = argparse.ArgumentParser()
@@ -23,10 +17,13 @@ def fetch_args():
     parser.add_argument('-tape', '--useTAPE', type=str, default='', help='Use TAPE as pretrain')
 
     args = parser.parse_args()
+    currentTime = datetime.datetime.now().strftime('%Y%m%d-%Hh')
 
-    currentTime = datetime.datetime.now().strftime('%Y%m%d-%Hh%M')
     args.currentTime = currentTime
-
-    args.output_dir = f'./output/{args.useTAPE}{args.task_type}_ep_{args.epoch}_bs_{args.batch_size}_lr_{args.learning_rate}_ws_{args.warmup_steps}_pt_{args.pretrain}_time_{currentTime}_v2'
+    args.SAVE_DIR = '/Users/minjunpark/Documents/RLfinance/saved_models'
+    args.DATA_SAVE_DIR = 'datasets'
+    args.TRAINED_MODEL_DIR = "trained_models"
+    args.TENSORBOARD_LOG_DIR = "tensorboard_log"
+    args.RESULTS_DIR = "results"
 
     return args
