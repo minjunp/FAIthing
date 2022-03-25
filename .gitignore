@@ -1,3 +1,5 @@
 FinRL
 saved_models
 bash_run
+
+*.pyc
