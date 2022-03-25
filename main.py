@@ -14,6 +14,8 @@ from utils import save_output
 from trainers.trainer import Trainer
 from evaluators.evaluator import Evaluator
 from backtesting.backtest import backtest_stats, backtest_plot, get_daily_return, get_baseline
+from stable_baselines3 import DDPG
+
 import sys
 config = fetch_args()
 
@@ -34,14 +36,21 @@ def main():
 
     # Get trading environment
     ratio_list = ['RSI_14', 'SMA_25']
-    # initialize first
+
+    
+    # Invoke RL trainer
     mt = Trainer(df_train, ratio_list)
+    """
     trained_model, env_kwargs = mt.train_func()
+    """
+
+    env_kwargs = mt.get_info()
+    trained_model = DDPG.load(f'{config.SAVE_DIR}/{config.currentTime}/{config.TRAINED_MODEL_DIR}/ddpg.zip')
 
     # Save model
     # Later apply conig name
     save_output.save_model(trained_model, 'ddpg')
-
+    
     # Testing for validation data
     et = Evaluator(df_test, trained_model, env_kwargs)
     df_account_value, df_actions = et.eval_func()
