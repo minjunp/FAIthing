@@ -17,6 +17,8 @@ from utils.data_split import data_split
 from src.env_stocktrading import StockTradingEnv
 from models.models import DRLAgent
 from utils import save_output
+from utils.fetch_args import fetch_args
+config = fetch_args()
 
 class Trainer:
     def __init__(self, df_train, ratio_list):
@@ -28,11 +30,6 @@ class Trainer:
         stock_dimension = len(self.df_train.tic.unique())
         state_space = 1 + 2*stock_dimension + len(self.ratio_list)*stock_dimension
         print(f"Stock Dimension: {stock_dimension}, State Space: {state_space}")
-        return stock_dimension, state_space
-    
-    def train_func(self):
-        # Get trading environment info
-        stock_dimension, state_space = self.get_info()
 
         # Parameters for the environment
         env_kwargs = {
@@ -45,8 +42,13 @@ class Trainer:
             "tech_indicator_list": self.ratio_list,
             "action_space": stock_dimension,
             "reward_scaling": 1e-4
-
         }
+        return env_kwargs
+    
+    def train_func(self):
+        # Get trading environment info
+        env_kwargs = self.get_info()
+        # Parameters for the environment
 
         # Establish the training environment using StockTradingEnv() class
         e_train_gym = StockTradingEnv(df=self.df_train, **env_kwargs)
@@ -62,4 +64,4 @@ class Trainer:
                                     tb_log_name='ddpg',
                                     total_timesteps=50000)
         
-        return trained_model, env_kwargs
+        return trained_model
