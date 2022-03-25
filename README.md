@@ -50,10 +50,11 @@ To get a local copy up and running follow these simple steps.
 Install conda environment
 
 ```sh
-conda create -n RLfinance python=3.7
-pip install pandas sklearn wandb matplotlib seqeval seaborn notebook
-pip install transformers==4.8.0
-pip install datasets==1.8.0
+conda create -n RLfinance python=3.8
+pip install pandas sklearn matplotlib seaborn notebook
+conda install -c conda-forge ta-lib
+pip install yfinance
+pip install gym==0.7.4 stable-baselines3 pyfolio
 ```
 
 If using Nvidia GPU:
@@ -64,7 +65,7 @@ conda install pytorch=1.09 torchvision torchaudio cudatoolkit=11.1 -c pytorch -c
 Activate conda environment 
 
 ```sh
-conda activate epiparatope
+conda activate RLfinance
 ```
 ## Data
 
