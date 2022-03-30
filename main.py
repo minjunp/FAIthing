@@ -20,24 +20,25 @@ import sys
 config = fetch_args()
 
 def main():
+    print(f'Trade Start Date: {config.TRADE_START_DATE}')
+    print(f'Backtest Start Date: {config.BACKTEST_START_DATE}')
+    print(f'Trade End Date: {config.TRADE_END_DATE}')
+
     # Create relevant directory
     save_output.create_dir()
 
     tickers = ['FB', 'AMZN', 'AAPL', 'NVDA', 'GOOG']
     indicators = ['RSI', 'SMA']
-    start_date = '2015-01-01'
-    end_date = '2016-01-01'
 
-    df = data_loader.yahooProcessor(tickers, indicators, start_date, end_date)
+    df = data_loader.yahooProcessor(tickers, indicators, config.start_date, config.end_date)
 
     # Split into train and test
-    df_train = data_split(df, '2015-01-01', '2015-06-01')
-    df_test = data_split(df, '2015-06-01', '2016-01-01')
+    df_train = data_split(df, config.TRADE_START_DATE, config.BACKTEST_START_DATE)
+    df_test = data_split(df, config.BACKTEST_START_DATE, config.TRADE_END_DATE)
 
     # Get trading environment
     ratio_list = ['RSI_14', 'SMA_25']
 
-    
     # Invoke RL trainer
     mt = Trainer(df_train, ratio_list)
     """

@@ -11,10 +11,7 @@ def fetch_args():
     parser.add_argument('-bs', '--batch_size', type=int, default=8, help='Batch size')
     parser.add_argument('-lr', '--learning_rate', type=float64, default=3e-5, help='Optimizer learning rate')
     parser.add_argument('-ws', '--warmup_steps', type=int, default=0, help='Number of warmup steps')
-    
-    parser.add_argument('-pt', '--pretrain', type=str, default='yes', help='Use pre-train or not')
-    parser.add_argument('-ptdir', '--pretrainDIR', type=str, default='/db2/users/minjunpark/EpiBERTope/tokenClassification/checkpoint/checkpoint-1252031', help='pre-trained checkpoint directory')
-    parser.add_argument('-tape', '--useTAPE', type=str, default='', help='Use TAPE as pretrain')
+
 
     args = parser.parse_args()
     currentTime = datetime.datetime.now().strftime('%Y%m%d-%Hh')
@@ -26,7 +23,8 @@ def fetch_args():
     args.TENSORBOARD_LOG_DIR = "tensorboard_log"
     args.RESULTS_DIR = "results"
 
-    args.TRADE_START_DATE = "2021-11-01"
-    args.TRADE_END_DATE = "2021-12-01"
+    args.TRADE_START_DATE = "2015-01-01"
+    args.TRADE_END_DATE = "2016-01-01"
+    args.BACKTEST_START_DATE = "2015-06-01"
 
     return args

@@ -1,3 +1,6 @@
+# IEX
+IEX_API_TOKEN = 'pk_2b94639ed238479da3d120282b9a14ac'
+
 # dir
 DATA_SAVE_DIR = "../saved_models/datasets"
 TRAINED_MODEL_DIR = "../saved_models/trained_models"
