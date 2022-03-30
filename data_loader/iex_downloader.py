@@ -73,6 +73,28 @@ class IEXStock:
 
         return r.json()
 
+    """
+    last: Specify the number of quarters or years to return. One quarter is returned by default. 
+    You can specify up to 12 quarters with quarter, or up to 4 years with annual.
+    """
+    def get_balance_sheet(self, last=1):
+        url = f"{self.BASE_URL}/stock/{self.symbol}/balance-sheet?last={last}&token={self.token}"
+        r = requests.get(url)
+
+        return r.json()
+
+    def get_cash_flow(self, last=1):
+        url = f"{self.BASE_URL}/stock/{self.symbol}/cash-flow?last={last}&token={self.token}"
+        r = requests.get(url)
+
+        return r.json()
+
+    def get_income_statement(self, last=1):
+        url = f"{self.BASE_URL}/stock/{self.symbol}/income?last={last}&token={self.token}"
+        r = requests.get(url)
+
+        return r.json()
+
     def get_dividends(self, range='5y'):
         url = f"{self.BASE_URL}/stock/{self.symbol}/dividends/{range}?token={self.token}"
         r = requests.get(url)
