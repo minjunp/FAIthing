@@ -34,7 +34,7 @@ def main():
 
     # Split into train and test
     df_train = data_split(df, config.TRADE_START_DATE, config.BACKTEST_START_DATE)
-    df_test = data_split(df, config.BACKTEST_START_DATE, config.TRADE_END_DATE)
+    df_test = data_split(df, config.BACKTEST_START_DATE, config.BACKTEST_END_DATE)
 
     # Get trading environment
     ratio_list = ['RSI_14', 'SMA_25']
@@ -46,6 +46,7 @@ def main():
     """
 
     env_kwargs = mt.get_info()
+    # Need to be changed in config file eventually
     trained_model = DDPG.load(f'{config.SAVE_DIR}/{config.currentTime}/{config.TRAINED_MODEL_DIR}/ddpg.zip')
 
     # Save model
@@ -66,8 +67,8 @@ def main():
     print("==============Get Baseline Stats===========")
     baseline_df = get_baseline(
             ticker="^DJI", 
-            start = '2015-06-01',
-            end = '2016-01-01')
+            start = config.BACKTEST_START_DATE,
+            end = config.BACKTEST_END_DATE)
 
     stats = backtest_stats(baseline_df, value_col_name = 'close')
 
@@ -78,8 +79,8 @@ def main():
     # NASDAQ 100: ^NDX
     backtest_plot(df_account_value, 
                 baseline_ticker = '^DJI', 
-                baseline_start = '2015-06-01',
-                baseline_end = '2016-01-01')
+                baseline_start = config.BACKTEST_START_DATE,
+                baseline_end = config.BACKTEST_END_DATE)
 
 if __name__ == "__main__":
     start = time.process_time()

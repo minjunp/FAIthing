@@ -24,7 +24,7 @@ def fetch_args():
     args.RESULTS_DIR = "results"
 
     args.TRADE_START_DATE = "2015-01-01"
-    args.TRADE_END_DATE = "2016-01-01"
     args.BACKTEST_START_DATE = "2015-06-01"
+    args.BACKTEST_END_DATE = "2016-01-01"
 
     return args
