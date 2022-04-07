@@ -22,7 +22,7 @@ config = fetch_args()
 def main():
     print(f'Trade Start Date: {config.TRADE_START_DATE}')
     print(f'Backtest Start Date: {config.BACKTEST_START_DATE}')
-    print(f'Trade End Date: {config.TRADE_END_DATE}')
+    print(f'Trade End Date: {config.BACKTEST_END_DATE}')
 
     # Create relevant directory
     save_output.create_dir()
@@ -30,7 +30,7 @@ def main():
     tickers = ['FB', 'AMZN', 'AAPL', 'NVDA', 'GOOG']
     indicators = ['RSI', 'SMA']
 
-    df = data_loader.yahooProcessor(tickers, indicators, config.start_date, config.end_date)
+    df = data_loader.yahooProcessor(tickers, indicators, config.TRADE_START_DATE, config.BACKTEST_END_DATE)
 
     # Split into train and test
     df_train = data_split(df, config.TRADE_START_DATE, config.BACKTEST_START_DATE)
@@ -41,13 +41,12 @@ def main():
 
     # Invoke RL trainer
     mt = Trainer(df_train, ratio_list)
-    """
+
     trained_model, env_kwargs = mt.train_func()
-    """
 
     env_kwargs = mt.get_info()
     # Need to be changed in config file eventually
-    trained_model = DDPG.load(f'{config.SAVE_DIR}/{config.currentTime}/{config.TRAINED_MODEL_DIR}/ddpg.zip')
+    # trained_model = DDPG.load(f'{config.SAVE_DIR}/{config.currentTime}/{config.TRAINED_MODEL_DIR}/ddpg.zip')
 
     # Save model
     # Later apply conig name

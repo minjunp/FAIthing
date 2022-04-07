@@ -321,8 +321,6 @@ class StockTradingEnv(gym.Env):
             self.rewards_memory.append(self.reward)
             self.reward = self.reward * self.reward_scaling
 
-        # The environment’s step function returns exactly what we need. In fact, step returns four values.
-        # https://gym.openai.com/docs/
         return self.state, self.reward, self.terminal, {}
 
     def reset(self):
@@ -479,7 +477,7 @@ class StockTradingEnv(gym.Env):
         return [seed]
 
     def get_sb_env(self):
-        # "lamdba: self" holds necessary open.ai gym default functions such as seed, reset, step, render functions
         e = DummyVecEnv([lambda: self])
+        # reset all the environments: https://stable-baselines3.readthedocs.io/en/master/guide/vec_envs.html#stable_baselines3.common.vec_env.DummyVecEnv.reset
         obs = e.reset()
         return e, obs
