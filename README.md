@@ -55,7 +55,8 @@ conda activate RLfinance
 pip install pandas sklearn matplotlib seaborn notebook
 conda install -c conda-forge ta-lib
 pip install yfinance
-pip install gym==0.7.4 stable-baselines3
+pip install gym==0.7.4 
+pip install stable-baselines3
 pip install git+https://github.com/quantopian/pyfolio
 ```
 
