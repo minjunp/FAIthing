@@ -51,7 +51,15 @@ Install conda environment
 
 ```sh
 conda create -n RLfinance python=3.8
+```
+
+Activate conda environment 
+```sh
 conda activate RLfinance
+```
+
+Install dependencies
+```sh
 pip install pandas sklearn matplotlib seaborn notebook
 conda install -c conda-forge ta-lib
 pip install yfinance
@@ -63,12 +71,6 @@ pip install git+https://github.com/quantopian/pyfolio
 If using Nvidia GPU:
 ```sh
 conda install pytorch=1.09 torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
-```
-
-Activate conda environment 
-
-```sh
-conda activate RLfinance
 ```
 ## Data
 
