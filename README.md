@@ -51,6 +51,7 @@ Install conda environment
 
 ```sh
 conda create -n RLfinance python=3.8
+conda activate RLfinance
 pip install pandas sklearn matplotlib seaborn notebook
 conda install -c conda-forge ta-lib
 pip install yfinance
