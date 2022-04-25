@@ -8,7 +8,7 @@ Return pd.DataFrame with list of tickers + indicators
 def yahooProcessor(ticker_list, indicator_list, start_date, end_date):
     df = pd.DataFrame()
 
-    # Loop over ticker list
+    # Loop over ticker list -- changed later
     for tic in ticker_list:
         print(tic)
         temp_df = yf.download(tic, start=start_date, end=end_date)
