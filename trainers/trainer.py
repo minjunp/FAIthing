@@ -14,7 +14,8 @@ from utils.dirs import create_dir
 from utils.fetch_args import fetch_args
 from utils.data_split import data_split
 
-from src.env_stocktrading import StockTradingEnv
+# from src.env_stocktrading import StockTradingEnv
+from src.env_stocktrading_longshort import StockTradingEnv
 from models.models import DRLAgent
 from utils import save_output
 from utils.fetch_args import fetch_args
@@ -33,7 +34,7 @@ class Trainer:
 
         # Parameters for the environment
         env_kwargs = {
-            "hmax": 100,
+            "hmax": 50,
             "initial_amount": 1000000,
             "buy_cost_pct": 0.001,
             "sell_cost_pct": 0.001,
@@ -62,6 +63,6 @@ class Trainer:
         model = agent.get_model("ddpg")
         trained_model = agent.train_model(model=model, 
                                     tb_log_name='ddpg',
-                                    total_timesteps=50000)
+                                    total_timesteps=5000)
         
         return trained_model

@@ -15,7 +15,7 @@ from trainers.trainer import Trainer
 from evaluators.evaluator import Evaluator
 from backtesting.backtest import backtest_stats, backtest_plot, get_daily_return, get_baseline
 from stable_baselines3 import DDPG
-
+from config import config_tickers
 import sys
 config = fetch_args()
 
@@ -27,7 +27,9 @@ def main():
     # Create relevant directory
     save_output.create_dir()
 
-    tickers = ['FB', 'AMZN', 'AAPL', 'NVDA', 'GOOG']
+    # tickers = ['FB', 'AMZN', 'AAPL', 'NVDA', 'GOOG']
+    tickers = config_tickers.DOW_30_TICKER
+
     indicators = ['RSI', 'SMA']
 
     df = data_loader.yahooProcessor(tickers, indicators, config.TRADE_START_DATE, config.BACKTEST_END_DATE)
@@ -41,20 +43,20 @@ def main():
 
     # Invoke RL trainer
     mt = Trainer(df_train, ratio_list)
-
-    trained_model, env_kwargs = mt.train_func()
-
     env_kwargs = mt.get_info()
-    # Need to be changed in config file eventually
-    # trained_model = DDPG.load(f'{config.SAVE_DIR}/{config.currentTime}/{config.TRAINED_MODEL_DIR}/ddpg.zip')
 
-    # Save model
-    # Later apply conig name
-    save_output.save_model(trained_model, 'ddpg')
+    if config.usepretrain == 'yes':
+        trained_model = DDPG.load(f'{config.SAVE_DIR}/{config.currentTime}/{config.TRAINED_MODEL_DIR}/ddpg.zip')
+    elif config.usepretrain == 'no':
+        trained_model = mt.train_func()
+        save_output.save_model(trained_model, 'ddpg')
+    else:
+        raise TypeError('Define pretraining')
     
     # Testing for validation data
     et = Evaluator(df_test, trained_model, env_kwargs)
     df_account_value, df_actions = et.eval_func()
+    save_output.save_to_csv(df_actions, 'actions.csv')
 
     # Backtesting
     print("==============Get Backtest Results===========")

@@ -10,6 +10,7 @@ def yahooProcessor(ticker_list, indicator_list, start_date, end_date):
 
     # Loop over ticker list
     for tic in ticker_list:
+        print(tic)
         temp_df = yf.download(tic, start=start_date, end=end_date)
         temp_df["tic"] = tic
 

@@ -11,6 +11,10 @@ def fetch_args():
     parser.add_argument('-bs', '--batch_size', type=int, default=8, help='Batch size')
     parser.add_argument('-lr', '--learning_rate', type=float64, default=3e-5, help='Optimizer learning rate')
     parser.add_argument('-ws', '--warmup_steps', type=int, default=0, help='Number of warmup steps')
+    parser.add_argument('-pt', '--usepretrain', type=str, default='no', help='Use pretrained model')
+    parser.add_argument('-tsd', '--TRADE_START_DATE', type=str, default='2015-01-01', help='Trade Start Date')
+    parser.add_argument('-bsd', '--BACKTEST_START_DATE', type=str, default='2015-06-01', help='Backtest Start Date')
+    parser.add_argument('-bed', '--BACKTEST_END_DATE', type=str, default='2016-01-01', help='Backtest End Date')
 
 
     args = parser.parse_args()
@@ -22,9 +26,5 @@ def fetch_args():
     args.TRAINED_MODEL_DIR = "trained_models"
     args.TENSORBOARD_LOG_DIR = "tensorboard_log"
     args.RESULTS_DIR = "results"
-
-    args.TRADE_START_DATE = "2015-01-01"
-    args.BACKTEST_START_DATE = "2015-06-01"
-    args.BACKTEST_END_DATE = "2016-01-01"
 
     return args
