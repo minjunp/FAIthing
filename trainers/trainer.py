@@ -14,8 +14,8 @@ from utils.dirs import create_dir
 from utils.fetch_args import fetch_args
 from utils.data_split import data_split
 
-# from src.env_stocktrading import StockTradingEnv
-from src.env_stocktrading_longshort import StockTradingEnv
+from src.env_stocktrading import StockTradingEnv
+# from src.env_stocktrading_longshort import StockTradingEnv
 from models.models import DRLAgent
 from utils import save_output
 from utils.fetch_args import fetch_args

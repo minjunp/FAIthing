@@ -1,5 +1,5 @@
 import sys
-# sys.path.append('/Users/minjunpark/Documents/RLfinance')
+sys.path.append('/Users/minjunpark/Documents/RLfinance')
 
 # Import libraries
 import pandas as pd
@@ -38,7 +38,7 @@ def main():
     intervals = '1d'
     indicators = ['RSI', 'SMA']
 
-    yp = data_loader.yahooProcessor(tickers, period, intervals, indicators, start = config.TRADE_START_DATE, end = config.BACKTEST_END_DATE)
+    yp = data_loader.yahooProcessor(tickers, period, intervals, indicators)
     df = yp._add_indicator()
 
     # Split into train and test

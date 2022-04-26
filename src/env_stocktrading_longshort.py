@@ -387,7 +387,7 @@ class StockTradingEnv(gym.Env):
                 # for multiple stock
                 state = (
                     [self.initial_amount]
-                    + self.data.close.values.tolist()
+                    + self.data.Close.values.tolist()
                     + [0] * self.stock_dim
                     + sum(
                         [
@@ -401,7 +401,7 @@ class StockTradingEnv(gym.Env):
                 # for single stock
                 state = (
                     [self.initial_amount]
-                    + [self.data.close]
+                    + [self.data.Close]
                     + [0] * self.stock_dim
                     + sum([[self.data[tech]]
                           for tech in self.tech_indicator_list], [])
@@ -412,7 +412,7 @@ class StockTradingEnv(gym.Env):
                 # for multiple stock
                 state = (
                     [self.previous_state[0]]
-                    + self.data.close.values.tolist()
+                    + self.data.Close.values.tolist()
                     + self.previous_state[
                         (self.stock_dim + 1): (self.stock_dim * 2 + 1)
                     ]
@@ -428,7 +428,7 @@ class StockTradingEnv(gym.Env):
                 # for single stock
                 state = (
                     [self.previous_state[0]]
-                    + [self.data.close]
+                    + [self.data.Close]
                     + self.previous_state[
                         (self.stock_dim + 1): (self.stock_dim * 2 + 1)
                     ]
@@ -442,7 +442,7 @@ class StockTradingEnv(gym.Env):
             # for multiple stock
             state = (
                 [self.state[0]]
-                + self.data.close.values.tolist()
+                + self.data.Close.values.tolist()
                 + list(self.state[(self.stock_dim + 1): (self.stock_dim * 2 + 1)])
                 + sum(
                     [
@@ -457,7 +457,7 @@ class StockTradingEnv(gym.Env):
             # for single stock
             state = (
                 [self.state[0]]
-                + [self.data.close]
+                + [self.data.Close]
                 + list(self.state[(self.stock_dim + 1): (self.stock_dim * 2 + 1)])
                 + sum([[self.data[tech]]
                       for tech in self.tech_indicator_list], [])

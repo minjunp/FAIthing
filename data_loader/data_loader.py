@@ -32,7 +32,7 @@ class yahooProcessor():
             # fetch data by interval (including intraday if period < 60 days)
             # valid intervals: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
             # (optional, default is '1d')
-            interval = self.interval,
+            interval = self.intervals,
 
             # group by ticker (to access via data['SPY'])
             # (optional, default is 'column')
@@ -56,7 +56,11 @@ class yahooProcessor():
         )
         return df
 
-    def _add_indicator(self, df):
+    def _add_indicator(self):
+        df = self._get_yfinance_data()
+         # Some values in-between are missing - e.g. 1-min interval df
+        df.ffill(inplace=True)
+
         df_combined = pd.DataFrame()
 
         for ticker in self.tickers:
@@ -69,19 +73,21 @@ class yahooProcessor():
             if 'SMA' in self.indicators:
                 df2 = Indicators.addSMA(df2)
             
-            # Append to dataframe
+            # Append to d
+            # ataframe
             df_combined = pd.concat([df_combined, df2], ignore_index=True)
         
         # drop missing data
         df_combined = df_combined.dropna()
         df_combined = df_combined.reset_index(drop=True)
 
-        # create day of the week column (monday = 0)
-        if self.period not in ['1m','2m','5m','15m','30m','60m','90m','1h']:
-            df_combined["day"] = df_combined["Date"].dt.dayofweek
+        if self.intervals in ['1m','2m','5m','15m','30m','60m','90m','1h']:
             df_combined = df_combined.sort_values(by=["Datetime", "tic"]).reset_index(drop=True)
+            df_combined.rename(columns={"Datetime": "Date"}, inplace=True)
             
         else:
+            # create day of the week column (monday = 0)
+            df_combined["day"] = df_combined["Date"].dt.dayofweek
             df_combined = df_combined.sort_values(by=["Date", "tic"]).reset_index(drop=True)
             # convert date to standard string format, easy to filter
             # df_combined["Date"] = df_combined.Date.apply(lambda x: x.strftime("%Y-%m-%d"))

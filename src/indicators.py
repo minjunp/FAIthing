@@ -6,14 +6,14 @@ class Indicators:
         """
         Add RSI based on timeperiod value
         """
-        df[f'RSI_{timeperiod}'] = talib.RSI(df.close, timeperiod=timeperiod)
-
+        df[f'RSI_{timeperiod}'] = talib.RSI(df.Close, timeperiod=timeperiod)
+       
         return df
 
     def addSMA(df, timeperiod=25):
         """
         Add SMA based on timeperiod value
         """
-        df[f'SMA_{timeperiod}'] = talib.SMA(df.close, timeperiod=timeperiod)
+        df[f'SMA_{timeperiod}'] = talib.SMA(df.Close, timeperiod=timeperiod)
 
         return df
