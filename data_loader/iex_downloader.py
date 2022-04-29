@@ -4,11 +4,11 @@
 """
 Interesting features:
 
-Financials as Reported (Since 2010) --> Potentially most useful, including all list below 4?
 Balance Sheet (Last 4 years)
 Cash Flow (Last 4 years)
 Earnings (Last 4 years)
 Income Statement (Last 4 years)
+Financials as Reported (Since 2010) --> Not useful since formats differ
 
 Sector Performance (Current time)
 Analyst Recommendation (Current time)
@@ -91,6 +91,12 @@ class IEXStock:
 
     def get_income_statement(self, last=1):
         url = f"{self.BASE_URL}/stock/{self.symbol}/income?last={last}&token={self.token}"
+        r = requests.get(url)
+
+        return r.json()
+
+    def get_earnings(self, last=1):
+        url = f"{self.BASE_URL}/stock/{self.symbol}/earnings?last={last}&token={self.token}"
         r = requests.get(url)
 
         return r.json()
