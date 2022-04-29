@@ -194,6 +194,16 @@ class StockTradingEnv(gym.Env):
             f"{config.SAVE_DIR}/{config.currentTime}/{config.RESULTS_DIR}/account_value_trade_{self.episode}.png")
         plt.close()
 
+    # class ActionWrapper(gym.ActionWrapper):
+    #     def __init__(self, env):
+    #         super().__init__(env)
+        
+    #     def action(self, action):
+    #         if action == 3:
+    #             return random.choice([0,1,2])
+    #         else:
+    #             return action
+
     def step(self, actions):
         self.terminal = self.day >= len(self.df.index.unique()) - 1
         if self.terminal:
