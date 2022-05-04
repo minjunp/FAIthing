@@ -7,12 +7,21 @@ from gym import spaces
 from gym.utils import seeding
 from stable_baselines3.common.vec_env import DummyVecEnv
 from utils.fetch_args import fetch_args
+import random
 config = fetch_args()
 
 matplotlib.use("Agg")
-
 # from stable_baselines3.common import logger
 
+class ActionWrapper(gym.ActionWrapper):
+    def __init__(self, env):
+        super().__init__(env)
+    
+    def action(self, action):
+        if action == 3:
+            return random.choice([0,1,2])
+        else:
+            return action
 
 class StockTradingEnv(gym.Env):
     """A stock trading environment for OpenAI gym"""
@@ -90,9 +99,10 @@ class StockTradingEnv(gym.Env):
         def _do_sell_normal():
             if self.state[index + 1] > 0:
                 # Sell only if the price is > 0 (no missing data in this particular date)
-                # perform sell action based on the sign of the action on a particular stock
-                if self.state[index + self.stock_dim + 1] > 0:
-                    # Sell only if current asset is > 0
+                # perform sell action based on the sign of the action
+                # if self.state[index + self.stock_dim + 1] > 0:
+                # Sell even if the current asset = 0
+                if self.state[index + self.stock_dim + 1] >= 0:
                     sell_num_shares = min(
                         abs(action), self.state[index + self.stock_dim + 1]
                     )
@@ -194,18 +204,10 @@ class StockTradingEnv(gym.Env):
             f"{config.SAVE_DIR}/{config.currentTime}/{config.RESULTS_DIR}/account_value_trade_{self.episode}.png")
         plt.close()
 
-    # class ActionWrapper(gym.ActionWrapper):
-    #     def __init__(self, env):
-    #         super().__init__(env)
-        
-    #     def action(self, action):
-    #         if action == 3:
-    #             return random.choice([0,1,2])
-    #         else:
-    #             return action
-
     def step(self, actions):
         self.terminal = self.day >= len(self.df.index.unique()) - 1
+
+        # Final stage
         if self.terminal:
             # print(f"Episode: {self.episode}")
             if self.make_plots:
@@ -220,8 +222,7 @@ class StockTradingEnv(gym.Env):
                 + sum(
                     np.array(self.state[1: (self.stock_dim + 1)])
                     * np.array(
-                        self.state[(self.stock_dim + 1)
-                                    : (self.stock_dim * 2 + 1)]
+                        self.state[(self.stock_dim + 1): (self.stock_dim * 2 + 1)]
                     )
                 )
                 - self.initial_amount
@@ -280,9 +281,9 @@ class StockTradingEnv(gym.Env):
 
             return self.state, self.reward, self.terminal, {}
 
+        # If not final stage
         else:
-
-            actions = actions * self.hmax  # actions initially is scaled between 0 to 1
+            actions = actions * self.hmax  # actions initially is scaled between 0 to 1 (From action space)
             actions = actions.astype(
                 int
             )  # convert into integer because we can't by fraction of shares
@@ -295,6 +296,7 @@ class StockTradingEnv(gym.Env):
             )
             # print("begin_total_asset:{}".format(begin_total_asset))
 
+            # Get the rank of the values of each stock
             argsort_actions = np.argsort(actions)
 
             sell_index = argsort_actions[: np.where(actions < 0)[0].shape[0]]
@@ -331,6 +333,13 @@ class StockTradingEnv(gym.Env):
             self.asset_memory.append(end_total_asset)
             self.date_memory.append(self._get_date())
             self.reward = end_total_asset - begin_total_asset
+
+            # Penalize if number of selling and buying stocks is not equal to 1
+            # if len([i for i in actions if i > 0]) != 1:
+            #     self.reward -= 100
+            # if len([i for i in actions if i < 0]) != 1:
+            #     self.reward -= 100
+
             self.rewards_memory.append(self.reward)
             self.reward = self.reward * self.reward_scaling
 
@@ -348,8 +357,7 @@ class StockTradingEnv(gym.Env):
             previous_total_asset = self.previous_state[0] + sum(
                 np.array(self.state[1: (self.stock_dim + 1)])
                 * np.array(
-                    self.previous_state[(self.stock_dim + 1)
-                                         : (self.stock_dim * 2 + 1)]
+                    self.previous_state[(self.stock_dim + 1): (self.stock_dim * 2 + 1)]
                 )
             )
             self.asset_memory = [previous_total_asset]
@@ -435,8 +443,7 @@ class StockTradingEnv(gym.Env):
             state = (
                 [self.state[0]]
                 + self.data.Close.values.tolist()
-                + list(self.state[(self.stock_dim + 1)
-                       : (self.stock_dim * 2 + 1)])
+                + list(self.state[(self.stock_dim + 1): (self.stock_dim * 2 + 1)])
                 + sum(
                     [
                         self.data[tech].values.tolist()
@@ -451,8 +458,7 @@ class StockTradingEnv(gym.Env):
             state = (
                 [self.state[0]]
                 + [self.data.Close]
-                + list(self.state[(self.stock_dim + 1)
-                       : (self.stock_dim * 2 + 1)])
+                + list(self.state[(self.stock_dim + 1): (self.stock_dim * 2 + 1)])
                 + sum([[self.data[tech]]
                       for tech in self.tech_indicator_list], [])
             )
@@ -460,9 +466,9 @@ class StockTradingEnv(gym.Env):
 
     def _get_date(self):
         if len(self.df.tic.unique()) > 1:
-            date = self.data.Date.unique()[0]
+            date = self.data.date.unique()[0]
         else:
-            date = self.data.Date
+            date = self.data.date
         return date
 
     def save_asset_memory(self):

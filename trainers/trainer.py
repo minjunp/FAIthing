@@ -14,12 +14,15 @@ from utils.dirs import create_dir
 from utils.fetch_args import fetch_args
 from utils.data_split import data_split
 
-from src.env_stocktrading import StockTradingEnv
-# from src.env_stocktrading_longshort import StockTradingEnv
 from models.models import DRLAgent
 from utils import save_output
 from utils.fetch_args import fetch_args
 config = fetch_args()
+
+if config.env == 'normal':
+    from src.env_stocktrading import StockTradingEnv
+elif config.env == 'longshort':
+    from src.old.env_stocktrading_longshort import StockTradingEnv
 
 class Trainer:
     def __init__(self, df_train, ratio_list):

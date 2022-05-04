@@ -15,6 +15,7 @@ def fetch_args():
     parser.add_argument('-tsd', '--TRADE_START_DATE', type=str, default='2015-01-01', help='Trade Start Date')
     parser.add_argument('-bsd', '--BACKTEST_START_DATE', type=str, default='2018-01-01', help='Backtest Start Date')
     parser.add_argument('-bed', '--BACKTEST_END_DATE', type=str, default='2018-06-01', help='Backtest End Date')
+    parser.add_argument('-env', '--env', type=str, default='normal', help='Choose env')
 
 
     args = parser.parse_args()
