@@ -46,6 +46,7 @@ def main():
     if intervals in ['1m','2m','5m','15m','30m','60m','90m','1h']:
         df_train, df_test = data_split_short_term(df, test_pct=10)
     else:
+        # Check TRADE_START_DATE and BACKTEST_START_DATE in fetch_args.py
         df_train = data_split(df, config.TRADE_START_DATE, config.BACKTEST_START_DATE)
         df_test = data_split(df, config.BACKTEST_START_DATE, config.BACKTEST_END_DATE)
 

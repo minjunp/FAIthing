@@ -1,0 +1,1 @@
+python ./algos/long_term_trading.py --env normal 
