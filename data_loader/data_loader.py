@@ -95,3 +95,5 @@ class yahooProcessor():
         print("Shape of DataFrame: ", df.shape)
         
         return df_combined
+
+    # def _get_multiple_stocks(self)

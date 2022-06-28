@@ -9,7 +9,9 @@ from backtesting.backtest import backtest_stats, backtest_plot, get_daily_return
 from backtesting.func import calculate_df_account_val
 from utils import save_output
 """
-    Volatility Trading (VT) Algorithm: Buy if -3% for index stock (DOW, SPY), Sell if +3% for index stock (DOW, SPY)
+    Fundamental Trading (FT) Algorithm: 
+        Buy if below fundamental criteria
+        Sell if above fundamental criteria (Use IEX Cloud info)
     Inputs:
         tickers: list of tickers to track
 
@@ -21,44 +23,33 @@ def main():
     # Create relevant directory
     save_output.create_dir()
 
-    tickers = 'SPY'
+    tickers = ['SPY', 'AAPL', 'NVDA']
     period = '10y'
     intervals = '1d'
     indicators = []
 
     df = data_loader.yahooProcessor(tickers, period, intervals, indicators)._get_yfinance_data()
 
+    for tic in tickers:
+        df_temp = df[tic]
+        ## Add Fundamental information to this dataframe -- PE ratio, 
+        print('hi')
+
     closePrice = df.Close
-    pct_change = closePrice.pct_change(periods=1).fillna(0) * 100 # Multiply by 100 to change to percent (%
+    pct_change = closePrice.pct_change(periods=1).fillna(0) * 100 # Multiply by 100 to change to percent (%)
 
-    # Config & Initialization
     actions = (len(pct_change)+1) * [0]
-    threshold = 2 # N-percent change
-    num_own = 0 # number of stocks owned
-    fund = 10000 # Initial fund to start with --> Amount at hand
-    account_vals = []
-
+    threshold = 2
+    num = 10 # Number of stocks to buy / sell
     for i, val in enumerate(pct_change):
-        maxNum = int(fund / closePrice[i]) # Max number of stocks to trade
-
-        # More than threshold drop --> buy
+        # More than threshold drop -- buy
         if val < -threshold:
-            # Update actions
-            actions[i] += maxNum
-            actions[i+1] -= maxNum
-
-        # More than threshold rise --> sell
+            actions[i] += num
+            actions[i+1] -= num
+        # More than threshold rise -- sell
         elif val > threshold:
-            # Update actions
-            actions[i] -= maxNum
-            actions[i+1] += maxNum
-
-        # Move opposite direction (Sell --> Add to fund, Buy --> Subtract to fund)
-        fund -= actions[i] * closePrice[i]
-        num_own += actions[i] # Total number of particular stocks owned --> Changed by actions taken
-
-        total_asset = fund + (num_own * closePrice[i])
-        account_vals.append(total_asset)
+            actions[i] -= num
+            actions[i+1] += num
     
     # Delete last element that was included to prevent index error
     actions = actions[:-1]
@@ -66,7 +57,7 @@ def main():
     df_actions = pd.DataFrame(closePrice)
     df_actions['Actions'] = actions
 
-    df_account_value = pd.DataFrame({'account_value': account_vals}, index=df_actions.index)
+    df_account_value = calculate_df_account_val(df_actions, baseline=10000)
     df_account_value = df_account_value.reset_index(level=0)
     df_account_value.rename(columns={'Date': 'date'}, inplace=True)
     

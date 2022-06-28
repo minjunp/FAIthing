@@ -18,10 +18,10 @@ def calculate_df_account_val(df_actions, baseline):
     # Define initial amount
     num = 0 # number of stocks owned
     for i, action in enumerate(df_actions.Actions.values):
-        if action > 0:
+        if action > 0: # Action = buy
             baseline -= action * df_actions.Close[i]
             num += action # Total number of particular stocks owned
-        elif action < 0:
+        elif action < 0: # Action = sell
             baseline += -action * df_actions.Close[i] # Remember action is negative for selling
             num += action
         
