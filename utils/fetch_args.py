@@ -22,7 +22,7 @@ def fetch_args():
     currentTime = datetime.datetime.now().strftime('%Y%m%d-%Hh')
 
     args.currentTime = currentTime
-    args.SAVE_DIR = '/Users/minjunpark/Documents/RLfinance/saved_models'
+    args.SAVE_DIR = '/Users/minjunpark/Documents/FAIthing/saved_models'
     args.DATA_SAVE_DIR = 'datasets'
     args.TRAINED_MODEL_DIR = "trained_models"
     args.TENSORBOARD_LOG_DIR = "tensorboard_log"

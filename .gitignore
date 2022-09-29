@@ -1,7 +1,5 @@
-FinRL
+docs/FinRL
 saved_models
-bash_run
-junk
 data
 
 *.pyc
