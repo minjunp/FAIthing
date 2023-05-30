@@ -7,10 +7,10 @@ Return pd.DataFrame with list of tickers + indicators
 """
 
 class yahooProcessor():
-    def __init__(self, tickers, period, intervals, indicators, start = "", end = ""):
+    def __init__(self, tickers, interval, indicators, period='max', start = None, end = None):
         self.tickers = tickers
         self.period = period
-        self.intervals = intervals
+        self.interval = interval
         self.start = start
         self.end = end
         self.indicators = indicators
@@ -32,7 +32,7 @@ class yahooProcessor():
             # fetch data by interval (including intraday if period < 60 days)
             # valid intervals: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
             # (optional, default is '1d')
-            interval = self.intervals,
+            interval = self.interval,
 
             # group by ticker (to access via data['SPY'])
             # (optional, default is 'column')

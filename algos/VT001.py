@@ -1,6 +1,8 @@
 import sys
+import os
+cwd = os.getcwd()
+sys.path.append(f'{cwd}/..')
 
-sys.path.append("/Users/minjunpark/Documents/FAIthing")
 import pandas as pd
 import numpy as np
 import time
@@ -29,12 +31,12 @@ def main():
     save_output.create_dir()
 
     tickers = "SPY"
-    period = "10y"
-    intervals = "1d"
+    period = "1y"
+    interval = "1d"
     indicators = []
 
     df = data_loader.yahooProcessor(
-        tickers, period, intervals, indicators
+        tickers, interval, indicators, period=period
     )._get_yfinance_data()
 
     closePrice = df.Close
