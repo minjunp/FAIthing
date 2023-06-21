@@ -5,20 +5,19 @@ cwd = os.getcwd()
 sys.path.append(f"{cwd}/..")
 
 import pandas as pd
-import numpy as np
 import time
 from data_loader import data_loader
 from backtesting.backtest import (
     backtest_stats,
-    backtest_plot,
-    get_daily_return,
     get_baseline,
 )
 from backtesting.func import calculate_df_account_val
 from utils import save_output
-from tqdm import tqdm
 
-"""
+import matplotlib.pyplot as plt
+
+def main():
+    """
     Fundamental Trading (FT) Algorithm: 
         Buy if below fundamental criteria
         Sell if above fundamental criteria (Use IEX Cloud info)
@@ -27,14 +26,13 @@ from tqdm import tqdm
 
     Output:
         pd.DataFrame that stores buy/sell info
-"""
-
-
-def main():
+    """
+    
     # Create relevant directory
     save_output.create_dir()
 
-    tickers = ["SPY", "AAPL", "NVDA"]
+    # tickers = ["SPY", "AAPL", "NVDA"]
+    tickers = ["SPY"]
     period = "1y"
     interval = "1d"
     indicators = []
@@ -43,8 +41,8 @@ def main():
         tickers, interval, indicators, period=period
     )._get_yfinance_data()
 
-    for tic in tqdm(tickers):
-        df_temp = df[tic]
+    # for tic in tqdm(tickers):
+    #     df_temp = df[tic]
         ## Add Fundamental information to this dataframe -- PE ratio,
 
     closePrice = df.Close
@@ -92,20 +90,33 @@ def main():
         end=str(df_account_value["date"].iloc[-1])[:10],
     )
 
-    stats = backtest_stats(baseline_df, value_col_name="close")
-
     # Backtest plot
-    print("==============Compare to DJIA===========")
+    # baseline_df
+    # df_account_value
+    
+    df_account_value = df_account_value[:-1]
+    baseline_close = baseline_df.close.values
+    df_account_value['baseline'] = baseline_close
+    
+    df_account_value = df_account_value.set_index('date')
+    daily_pct_change = df_account_value.pct_change()
+    daily_pct_change.fillna(0, inplace=True)
+    cumprod_daily_pct_change = (1 + daily_pct_change).cumprod()
+    
+    def plot_backtest(cum_change):
+        fig = plt.figure(figsize=(15, 7))
+        ax1 = fig.add_subplot(1, 1, 1)
+        cum_change.plot(ax=ax1)
+        ax1.set_xlabel('Date')
+        ax1.set_ylabel('Cumulative return')
+        ax1.set_title('Stock Cumulative Returns')
+        plt.savefig('pct.png')
+        
+    plot_backtest(cumprod_daily_pct_change)
+
     # S&P 500: ^GSPC
     # Dow Jones Index: ^DJI
     # NASDAQ 100: ^NDX
-    backtest_plot(
-        df_account_value,
-        baseline_ticker="^DJI",
-        baseline_start=str(df_account_value["date"][0])[:10],
-        baseline_end=str(df_account_value["date"].iloc[-1])[:10],
-    )
-
 
 if __name__ == "__main__":
     start = time.process_time()
